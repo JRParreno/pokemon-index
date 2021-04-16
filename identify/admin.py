@@ -1,6 +1,7 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import PokemonTypes, PokemonSpecies, Pokemon
 from django.contrib.admin import widgets
+from django.db.models import Q
 admin.site.site_header = 'Pokemon Admin'
 
 
@@ -26,6 +27,18 @@ class PokemonTypesAdmin(admin.ModelAdmin):
 class PokemonsAdmin(admin.ModelAdmin):
     list_display = ('nickname', 'species', 'level', 'trainer')
     list_per_page = 5  # No of records per page
+
+    def save_model(self, request, obj, form, changed):
+        if '_continue' in request.POST:
+            if form.is_valid():
+                next_evolution = obj.species.next_evolution
+                if next_evolution is not None:
+                    get_species = PokemonSpecies.objects.get(
+                        pk=next_evolution.pk)
+                    if obj.level >= get_species.evolution_level:
+                        obj.species = next_evolution
+
+        super().save_model(request, obj, form, changed)
 
 
 admin.site.register(PokemonTypes, PokemonTypesAdmin)

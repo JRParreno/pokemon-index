@@ -17,7 +17,7 @@ class PokemonSpecies(models.Model):
         verbose_name_plural = "Pokemon Species"
 
     name = models.CharField(max_length=255, null=False, blank=False)
-    evolution_level = models.IntegerField()
+    evolution_level = models.PositiveSmallIntegerField(blank=True, null=True)
     next_evolution = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True)
     pokemon_types = models.ManyToManyField(PokemonTypes)

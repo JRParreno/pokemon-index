@@ -1,13 +1,12 @@
-from django.contrib.contenttypes.admin import GenericTabularInline
 from django.contrib import admin
-from .models import PokemonTypes, PokemonSpecies, Pokemons
-from .forms import ImportForm
+from .models import PokemonTypes, PokemonSpecies, Pokemon
 from django.contrib.admin import widgets
 admin.site.site_header = 'Pokemon Admin'
 
 
 class PokemonSpeciesAdmin(admin.ModelAdmin):
     list_display = ('name', 'show_types', 'evolution_level', 'next_evolution')
+    list_per_page = 5  # No of records per page
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         kwargs['widget'] = widgets.FilteredSelectMultiple(
@@ -21,8 +20,14 @@ class PokemonSpeciesAdmin(admin.ModelAdmin):
 
 class PokemonTypesAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    list_per_page = 5  # No of records per page
+
+
+class PokemonsAdmin(admin.ModelAdmin):
+    list_display = ('nickname', 'species', 'level', 'trainer')
+    list_per_page = 5  # No of records per page
 
 
 admin.site.register(PokemonTypes, PokemonTypesAdmin)
 admin.site.register(PokemonSpecies, PokemonSpeciesAdmin)
-admin.site.register(Pokemons)
+admin.site.register(Pokemon, PokemonsAdmin)

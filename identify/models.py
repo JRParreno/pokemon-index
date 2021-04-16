@@ -29,13 +29,13 @@ class PokemonSpecies(models.Model):
         return self.name
 
 
-class Pokemons(models.Model):
+class Pokemon(models.Model):
     class Meta:
         verbose_name_plural = "Pokemons"
 
     nickname = models.CharField(max_length=255)
     species = models.ForeignKey(PokemonSpecies, on_delete=models.CASCADE)
-    level = models.IntegerField()
+    level = models.PositiveSmallIntegerField(default=1, blank=True, null=True)
     trainer = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
